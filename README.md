@@ -10,10 +10,12 @@ A Cloudflare Worker service that acts as a registry for shadcn/ui components, tr
 ## API Endpoints
 
 ### GET `/r/:objectName`
+
 - **Description:** Retrieves a component JSON file from the static registry and increments its download count.
 - **Usage:** Make a GET request replacing `:objectName` with the JSON filename (e.g., `button.json`).
 
 ### GET `/s/:objectName`
+
 - **Description:** Returns the statistics for a specific component including:
   - Component name
   - JSON filename
@@ -22,12 +24,23 @@ A Cloudflare Worker service that acts as a registry for shadcn/ui components, tr
 ## Development
 
 1. **Clone the Repository**
+   ```sh
+   git clone https://github.com/R4ULtv/shadcn-registry.git
+   ```
 2. **Install Dependencies:**
    ```sh
    pnpm install
    ```
 3. **Configure KV Namespace ID:**
    Update your KV namespace ID in `wrangler.jsonc`.
+   ```jsonc
+   "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "your-kv-namespace-id"
+    }
+   ]
+   ```
 4. **Run Locally:**
    ```sh
    pnpm run dev
