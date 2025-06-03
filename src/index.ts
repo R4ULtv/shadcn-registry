@@ -45,20 +45,17 @@ app.get("/s/:objectName", async (c) => {
   }
   const counterKey = objectName.replace(".json", "");
 
-  const counter = Number(await c.env.KV.get(counterKey));
+  const counter = await c.env.KV.get(counterKey);
 
-  if (counter === 0) {
+  if (counter === null) {
     return c.json({ error: "Object not found" }, 404);
   }
 
-  return c.json(
-    {
-      key: counterKey,
-      file: counterKey + ".json",
-      count: counter,
-    },
-    200,
-  );
+  return c.json({
+    key: counterKey,
+    file: counterKey + ".json",
+    count: Number(counter),
+  });
 });
 
 export default app;
