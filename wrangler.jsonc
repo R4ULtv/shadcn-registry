@@ -6,7 +6,7 @@
   "kv_namespaces": [
     {
       "binding": "KV",
-      "id": "e6c235806c47465b84953d9dec275c46",
+      "id": "your-kv-namespace-id",
     },
   ],
   "assets": {
