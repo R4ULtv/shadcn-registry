@@ -1,3 +1,5 @@
+![Shadcn Registry](./public/og-image.png)
+
 A Cloudflare Worker service that acts as a registry for shadcn/ui components, tracking component usage statistics in real time.
 
 ## Features
