@@ -41,11 +41,13 @@ A Cloudflare Worker service that acts as a registry for shadcn/ui components, tr
     }
    ]
    ```
-4. **Run Locally:**
+4. **Add Component JSON Files:**
+   Place your component JSON files in the `public/static` folder. These files will be served by the registry and tracked for usage statistics.
+5. **Run Locally:**
    ```sh
    pnpm run dev
    ```
-5. **Deploy:**
+6. **Deploy:**
    ```sh
    pnpm run deploy
    ```
