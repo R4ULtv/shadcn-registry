@@ -20,10 +20,10 @@ Gets statistics for a specific component including:
 ## Development
 
 1. Clone the repository
-2. Install dependencies with `npm install`
+2. Install dependencies with `pnpm install`
 3. Configure your KV namespace ID in `wrangler.jsonc`
-4. Run locally with `npm run dev`
-5. Deploy with `npm run deploy`
+4. Run locally with `pnpm run dev`
+5. Deploy with `pnpm run deploy`
 
 ## Build Script
 
