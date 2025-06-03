@@ -64,6 +64,34 @@ For the best implementation, you can add the following script to your main proje
 }
 ```
 
+## Authentication
+
+Add simple token-based authentication to your registry endpoints by requiring a `token` query parameter (e.g., `/r/:objectName?token=YOUR_SECURE_TOKEN`).
+
+**Example:**
+```
+GET /r/button.json?token=YOUR_SECURE_TOKEN
+```
+
+On the server, check the `token` parameter. If it's missing or invalid, return a `401 Unauthorized` response.
+
+**Sample Hono Middleware:**
+
+```ts
+const AUTH_TOKEN = 'YOUR_SECURE_TOKEN'; // Use env vars in production
+const requireToken = (c, next) => {
+  if (c.req.query('token') !== AUTH_TOKEN) {
+    return c.text('Unauthorized', 401);
+  }
+  return next();
+};
+
+app.get('/r/:objectName', requireToken, ...);
+app.get('/s/:objectName', requireToken, ...);
+```
+
+Replace `YOUR_SECURE_TOKEN` with your actual token. For more, see the [shadcn registry docs](https://ui.shadcn.com/docs/registry/getting-started#adding-auth).
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
