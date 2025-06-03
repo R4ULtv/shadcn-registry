@@ -1,29 +1,41 @@
-A Cloudflare Worker service that acts as a registry for shadcn/ui components, tracking component usage statistics.
+A Cloudflare Worker service that acts as a registry for shadcn/ui components, tracking component usage statistics in real time.
 
 ## Features
 
-- Serves component JSON files from a static registry
-- Tracks component download counts using Cloudflare KV
-- Provides download statistics via API endpoints
+- **Serves Static Component JSON Files:** Component files are stored in the `public/static` folder.
+- **Real-time Usage Tracking:** Download counts are incremented and stored using Cloudflare KV.
+- **Simple API Endpoints:** Easily retrieve components and their usage statistics.
+- **Built on Hono:** Uses the lightweight [`Hono`](https://github.com/honojs/hono) framework for routing.
 
 ## API Endpoints
 
-### GET /r/:objectName
-Retrieves a component JSON file and increments its download count.
+### GET `/r/:objectName`
+- **Description:** Retrieves a component JSON file from the static registry and increments its download count.
+- **Usage:** Make a GET request replacing `:objectName` with the JSON filename (e.g., `button.json`).
 
-### GET /s/:objectName 
-Gets statistics for a specific component including:
-- Component name
-- JSON filename
-- Download count
+### GET `/s/:objectName`
+- **Description:** Returns the statistics for a specific component including:
+  - Component name
+  - JSON filename
+  - Total download count
 
 ## Development
 
-1. Clone the repository
-2. Install dependencies with `pnpm install`
-3. Configure your KV namespace ID in `wrangler.jsonc`
-4. Run locally with `pnpm run dev`
-5. Deploy with `pnpm run deploy`
+1. **Clone the Repository**
+2. **Install Dependencies:**
+   ```sh
+   pnpm install
+   ```
+3. **Configure KV Namespace ID:**
+   Update your KV namespace ID in `wrangler.jsonc`.
+4. **Run Locally:**
+   ```sh
+   pnpm run dev
+   ```
+5. **Deploy:**
+   ```sh
+   pnpm run deploy
+   ```
 
 ## Build Script
 
@@ -37,4 +49,4 @@ For the best implementation, you can add the following script to your main proje
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
