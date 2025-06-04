@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 
 interface Bindings {
   KV: KVNamespace;
@@ -19,11 +20,19 @@ const updateDB = async (kv: KVNamespace, objectName: string) => {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
+// CORS middleware is enabled for all routes (*).
+// Remove this line if cross-origin access is not required.
+app.use("*", cors());
+
 app.get("/r/:objectName", async (c) => {
   const objectName = c.req.param("objectName");
 
   if (!objectName) {
     return c.json({ error: "Missing object name" }, 400);
+  }
+
+  if (!objectName.endsWith(".json")) {
+    return c.json({ error: "Object name must end with .json" }, 400);
   }
 
   try {
