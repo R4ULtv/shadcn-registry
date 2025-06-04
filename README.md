@@ -8,6 +8,7 @@ A Cloudflare Worker service that acts as a registry for shadcn/ui components, tr
 - **Real-time Usage Tracking:** Download counts are incremented and stored using Cloudflare KV.
 - **Simple API Endpoints:** Easily retrieve components and their usage statistics.
 - **Built on Hono:** Uses the lightweight [`Hono`](https://github.com/honojs/hono) framework for routing.
+- **CORS Enabled:** Configured to allow Cross-Origin Resource Sharing for broad accessibility.
 
 ## API Endpoints
 
@@ -22,6 +23,7 @@ A Cloudflare Worker service that acts as a registry for shadcn/ui components, tr
   - Component name
   - JSON filename
   - Total download count
+- **Caching:** This endpoint is cached for 10 minutes to improve performance. Statistics updates may be delayed by this cache duration.
 
 ## Development
 
@@ -66,9 +68,9 @@ For the best implementation, you can add the following script to your main proje
 
 ## Authentication
 
-Add simple token-based authentication to your registry endpoints by requiring a `token` query parameter (e.g., `/r/:objectName?token=YOUR_SECURE_TOKEN`).
+To add a layer of security, you can implement simple token-based authentication. This involves requiring a `token` query parameter on your registry endpoints (e.g., `/r/:objectName?token=YOUR_SECURE_TOKEN`).
 
-**Example:**
+**Example Usage:**
 ```
 GET /r/button.json?token=YOUR_SECURE_TOKEN
 ```
@@ -87,6 +89,7 @@ const requireToken = (c, next) => {
 };
 
 app.get('/r/:objectName', requireToken, ...);
+// You may also want to protect the stats endpoint:
 app.get('/s/:objectName', requireToken, ...);
 ```
 
