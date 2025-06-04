@@ -1,5 +1,6 @@
 import { Hono } from "hono";
-import { cors } from "hono/cors";
+import { cors } from "hono/cors"; // Remove if you no longer need CORS (Cross-Origin Resource Sharing) support.
+import { cache } from "hono/cache"; // Remove or adjust 'max-age' if you want statistics to update more frequently.
 
 interface Bindings {
   KV: KVNamespace;
@@ -52,25 +53,32 @@ app.get("/r/:objectName", async (c) => {
   }
 });
 
-app.get("/s/:objectName", async (c) => {
-  const objectName = c.req.param("objectName");
+app.get(
+  "/s/:objectName",
+  cache({
+    cacheName: "registry-stats",
+    cacheControl: "max-age=600", // Cache for 10 min
+  }),
+  async (c) => {
+    const objectName = c.req.param("objectName");
 
-  if (!objectName) {
-    return c.json({ error: "Missing object name" }, 400);
-  }
-  const counterKey = getKeyFromName(objectName);
+    if (!objectName) {
+      return c.json({ error: "Missing object name" }, 400);
+    }
+    const counterKey = getKeyFromName(objectName);
 
-  const counter = await c.env.KV.get(counterKey);
+    const counter = await c.env.KV.get(counterKey);
 
-  if (counter === null) {
-    return c.json({ error: "Object not found" }, 404);
-  }
+    if (counter === null) {
+      return c.json({ error: "Object not found" }, 404);
+    }
 
-  return c.json({
-    key: counterKey,
-    file: counterKey + ".json",
-    count: Number(counter),
-  });
-});
+    return c.json({
+      key: counterKey,
+      file: counterKey + ".json",
+      count: Number(counter),
+    });
+  },
+);
 
 export default app;
