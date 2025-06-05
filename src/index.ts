@@ -67,17 +67,22 @@ app.get(
     }
     const counterKey = getKeyFromName(objectName);
 
-    const counter = await c.env.KV.get(counterKey);
+    try {
+      const counter = await c.env.KV.get(counterKey);
 
-    if (counter === null) {
-      return c.json({ error: "Object not found" }, 404);
+      if (counter === null) {
+        return c.json({ error: "Object not found" }, 404);
+      }
+
+      return c.json({
+        objectKey: counterKey,
+        fileName: `${counterKey}.json`,
+        downloads: Number(counter),
+      });
+    } catch (error) {
+      console.error("Error retrieving object:", error);
+      return c.json({ error: "Error processing request" }, 500);
     }
-
-    return c.json({
-      key: counterKey,
-      file: counterKey + ".json",
-      count: Number(counter),
-    });
   },
 );
 
