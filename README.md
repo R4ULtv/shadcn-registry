@@ -4,26 +4,37 @@ A Cloudflare Worker service that acts as a registry for shadcn/ui components, tr
 
 ## Features
 
-- **Serves Static Component JSON Files:** Component files are stored in the `public/static` folder.
-- **Real-time Usage Tracking:** Download counts are incremented and stored using Cloudflare KV.
-- **Simple API Endpoints:** Easily retrieve components and their usage statistics.
+- **Serves Static Component JSON Files:** Component files are stored in the `public/static` folder and served via the `/r/:objectName` endpoint.
+- **Real-time Usage Tracking:** Download counts are incremented and stored using Cloudflare KV (binding name: `KV`).
+- **Simple API Endpoints:** Retrieve components and their usage statistics easily.
 - **Built on Hono:** Uses the lightweight [`Hono`](https://github.com/honojs/hono) framework for routing.
-- **CORS Enabled:** Configured to allow Cross-Origin Resource Sharing for broad accessibility.
+- **CORS Enabled:** All routes have CORS enabled for broad accessibility.
+
+## Bindings
+
+- **KV**: Cloudflare KV Namespace for tracking download counts. Must be bound as `KV`.
+- **REGISTRY**: Fetcher binding for serving static files from the `public/static` directory.
 
 ## API Endpoints
 
 ### GET `/r/:objectName`
 
-- **Description:** Retrieves a component JSON file from the static registry and increments its download count.
+- **Description:** Retrieves a component JSON file from the static registry and increments its download count asynchronously.
 - **Usage:** Make a GET request replacing `:objectName` with the JSON filename (e.g., `button.json`).
+- **Error Handling:**
+  - Returns `400` if `objectName` is missing or does not end with `.json`.
+  - Returns `404` if the file is not found.
 
 ### GET `/s/:objectName`
 
 - **Description:** Returns the statistics for a specific component including:
-  - Component name
-  - JSON filename
-  - Total download count
-- **Caching:** This endpoint is cached for 10 minutes to improve performance. Statistics updates may be delayed by this cache duration.
+  - `objectKey`: The key used in KV (filename without `.json`)
+  - `fileName`: The JSON filename
+  - `downloads`: Total download count
+- **Caching:** This endpoint is cached for 10 minutes (`max-age=600`). Statistics updates may be delayed by this cache duration.
+- **Error Handling:**
+  - Returns `400` if `objectName` is missing.
+  - Returns `404` if the object is not found in KV.
 
 ## Development
 
@@ -66,9 +77,9 @@ For the best implementation, you can add the following script to your main proje
 }
 ```
 
-## Authentication
+## Authentication (Optional)
 
-To add a layer of security, you can implement simple token-based authentication. This involves requiring a `token` query parameter on your registry endpoints (e.g., `/r/:objectName?token=YOUR_SECURE_TOKEN`).
+Authentication is **not implemented by default**. To add a layer of security, you can implement simple token-based authentication as described below. This involves requiring a `token` query parameter on your registry endpoints (e.g., `/r/:objectName?token=YOUR_SECURE_TOKEN`).
 
 **Example Usage:**
 ```
