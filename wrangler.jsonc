@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "shadcn-registry",
   "main": "src/index.ts",
-  "compatibility_date": "2025-06-03",
+  "compatibility_date": "2025-09-15",
   "kv_namespaces": [
     {
       "binding": "KV",
